@@ -1,0 +1,52 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    dealroadshow.kodegen.json_schema.url_template: 'https://raw.githubusercontent.com/instrumenta/kubernetes-json-schema/master/{version}/_definitions.json'
+    dealroadshow.kodegen.json_schema.versions: '%env(json:DEALROADSHOW_KODEGEN_JSON_SCHEMA_VERSIONS)%'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $srcDir: '%kernel.project_dir%/src'
+            $jsonSchemaUrlTemplate: '%dealroadshow.kodegen.json_schema.url_template%'
+            $jsonSchemaVersions: '%dealroadshow.kodegen.json_schema.versions%'
+    _instanceof:
+        Dealroadshow\JsonSchema\DataType\Factory\DataTypeFactoryInterface:
+            tags: ['dealroadshow.json_schema.data_type.factory']
+        Dealroadshow\Kodegen\API\CodeGeneration\PHP\TypeResolver\TypeResolverInterface:
+            tags: ['dealroadshow.kodegen.php.type_resolver']
+        Dealroadshow\Kodegen\API\CodeGeneration\PHP\ValueObject\VOClassGeneratorInterface:
+            tags: ['dealroadshow.kodegen.php.vo_class_generator']
+        Dealroadshow\Kodegen\API\CodeGeneration\PHP\Processor\Property\PropertyDefinitionProcessorInterface:
+            tags: [ 'dealroadshow.kodegen.php.processor.property_definition' ]
+        Dealroadshow\Kodegen\API\CodeGeneration\PHP\Processor\Property\PropertyProcessorInterface:
+            tags: ['dealroadshow.kodegen.php.processor.property']
+
+    App\:
+        resource: '../src/App/'
+        exclude:
+            - '../src/App/Kernel.php'
+
+    Dealroadshow\:
+        resource: '../src/Dealroadshow/'
+
+    Dealroadshow\JsonSchema\DataType\DataTypesService:
+        arguments: [!tagged_iterator {tag: 'dealroadshow.json_schema.data_type.factory'}]
+
+    Dealroadshow\Kodegen\API\CodeGeneration\PHP\PHPTypesService:
+        arguments: [!tagged_iterator {tag: 'dealroadshow.kodegen.php.type_resolver'}]
+
+    Dealroadshow\Kodegen\API\CodeGeneration\PHP\ValueObjectsService:
+        arguments:
+            $generators: !tagged_iterator {tag: 'dealroadshow.kodegen.php.vo_class_generator'}
+
+    Dealroadshow\Kodegen\API\CodeGeneration\PHP\Processor\PropertyProcessingService:
+        arguments:
+            - !tagged_iterator {tag: 'dealroadshow.kodegen.php.processor.property_definition'}
+            - !tagged_iterator {tag: 'dealroadshow.kodegen.php.processor.property'}
