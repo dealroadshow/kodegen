@@ -53,7 +53,7 @@ class ValueObjectsService
         );
     }
 
-    private function createClassName(string $definitionName, Context $context)
+    private function createClassName(string $definitionName, Context $context): ClassName
     {
         $namespaceName = $context->namespacePrefix().'\\ValueObject';
 

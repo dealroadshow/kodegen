@@ -32,7 +32,7 @@ class ClassName
 
     public static function isFQCN(string $string): bool
     {
-        return \str_contains($string, '\\');
+        return \str_contains($string, '\\') && !\str_contains($string, '|');
     }
 
     public static function fromNamespaceAndName(string $namespace, string $shortName): self

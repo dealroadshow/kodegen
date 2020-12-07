@@ -58,7 +58,7 @@ class MapClassGenerator extends AbstractCollectionClassGenerator
         $param = $this->defineNameParam($method);
         $method->addBody(
             \sprintf(
-                'return \array_key_exists($%s, $this->%s);',
+                'return array_key_exists($%s, $this->%s);',
                 $param->getName(),
                 self::PROPERTY_NAME
             )
@@ -116,10 +116,5 @@ class MapClassGenerator extends AbstractCollectionClassGenerator
     protected static function classNameSuffix(): string
     {
         return self::CLASS_NAME_SUFFIX;
-    }
-
-    protected static function propertyDocType(PHPType $itemType): string
-    {
-        return \sprintf('array<string, %s>|%s[]', $itemType->name(), $itemType->name());
     }
 }

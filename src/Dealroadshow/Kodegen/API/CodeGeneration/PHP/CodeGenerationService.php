@@ -5,6 +5,7 @@ namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP;
 use Dealroadshow\JsonSchema\JsonSchemaService;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Generator\APIClassGenerator;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Generator\BaseInterfacesGenerator;
+use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\PHPClass;
 use Dealroadshow\Kodegen\API\Definitions\Objects\ObjectDefinitionsService;
 
 class CodeGenerationService
@@ -65,7 +66,7 @@ class CodeGenerationService
         return $absPath;
     }
 
-    private function resourceInterface(string $namespacePrefix)
+    private function resourceInterface(string $namespacePrefix): PHPClass
     {
         $resourceInterface = $this->interfacesGenerator->resourceInterface(
             $namespacePrefix
@@ -75,7 +76,7 @@ class CodeGenerationService
         return $resourceInterface;
     }
 
-    private function resourceListInterface(string $namespacePrefix)
+    private function resourceListInterface(string $namespacePrefix): PHPClass
     {
         $resourceListInterface = $this->interfacesGenerator->resourceListInterface(
             $namespacePrefix

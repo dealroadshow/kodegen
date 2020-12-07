@@ -76,7 +76,7 @@ abstract class AbstractGenerator
         return $phpClass;
     }
 
-    private function className(ClassName $className)
+    private function className(ClassName $className): ClassName
     {
         $event = new ClassNameEvent($className);
         $this->dispatcher->dispatch($event);
@@ -268,7 +268,10 @@ abstract class AbstractGenerator
 
     protected function defineJsonSerializeMethod(ClassName $className, ClassType $class)
     {
-        $method = $class->addMethod('jsonSerialize');
+        $method = $class
+            ->addMethod('jsonSerialize')
+            ->setReturnNullable(false)
+            ->setReturnType('array');
         $method->addBody('return [');
 
         $indent = str_repeat(' ', 4);

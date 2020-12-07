@@ -10,10 +10,9 @@ use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\PHPType;
 
 class UnknownTypeResolver extends AbstractTypeResolver
 {
-
     public function resolve(DataTypeInterface $type, PHPTypesService $service, Context $context, bool $nullable): PHPType
     {
-        return new PHPType(null, 'mixed', false);
+        return new PHPType('mixed', 'mixed', false);
     }
 
     public function supports(DataTypeInterface $type): bool

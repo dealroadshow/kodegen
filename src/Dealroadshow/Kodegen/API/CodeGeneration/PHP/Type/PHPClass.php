@@ -3,11 +3,11 @@
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type;
 
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Context;
+use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Printer\PsrPrinter;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\Parameter;
 use Nette\PhpGenerator\Property;
-use Nette\PhpGenerator\PsrPrinter;
 
 class PHPClass
 {

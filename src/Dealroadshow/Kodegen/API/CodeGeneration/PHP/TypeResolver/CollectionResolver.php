@@ -11,7 +11,7 @@ use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Generator\MapClassGenerator;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\PHPTypesService;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\PHPType;
 
-class CollectionTypeResolver implements TypeResolverInterface
+class CollectionResolver implements TypeResolverInterface
 {
     private MapClassGenerator $mapGenerator;
     private ListClassGenerator $listGenerator;

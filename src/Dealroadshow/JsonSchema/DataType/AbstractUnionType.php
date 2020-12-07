@@ -5,12 +5,12 @@ namespace Dealroadshow\JsonSchema\DataType;
 abstract class AbstractUnionType extends AbstractType
 {
     /**
-     * @var array|DataTypeInterface[]
+     * @var DataTypeInterface[]
      */
     protected array $types;
 
     /**
-     * @param DataTypeInterface[]|array $types
+     * @param DataTypeInterface[] $types
      */
     public function __construct(array $types)
     {
@@ -18,7 +18,7 @@ abstract class AbstractUnionType extends AbstractType
     }
 
     /**
-     * @return array|DataTypeInterface[]
+     * @return DataTypeInterface[]
      */
     public function types(): array
     {

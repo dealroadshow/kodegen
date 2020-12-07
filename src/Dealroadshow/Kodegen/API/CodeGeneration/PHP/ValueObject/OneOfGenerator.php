@@ -12,15 +12,7 @@ use Nette\PhpGenerator\ClassType;
 
 class OneOfGenerator extends AbstractGenerator
 {
-    /**
-     * @param ClassName                   $className
-     * @param OneOfType|DataTypeInterface $type
-     * @param Context                     $context
-     * @param PHPTypesService             $service
-     *
-     * @return PHPClass
-     */
-    public function generate(ClassName $className, DataTypeInterface $type, Context $context, PHPTypesService $service): PHPClass
+    public function generate(ClassName $className, DataTypeInterface|OneOfType $type, Context $context, PHPTypesService $service): PHPClass
     {
         $class = new ClassType($className->shortName());
         $phpType = $service->resolveType($type, $context, false);

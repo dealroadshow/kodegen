@@ -2,7 +2,6 @@
 
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Generator;
 
-
 use Nette\PhpGenerator\ClassType;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Context;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\GeneratedClassesCache;
@@ -18,7 +17,6 @@ abstract class AbstractCollectionClassGenerator
     private GeneratedClassesCache $cache;
 
     abstract protected static function classNameSuffix(): string;
-    abstract protected static function propertyDocType(PHPType $itemType): string;
     abstract protected function defineAddMethod(ClassType $class, PHPType $itemType): self;
 
     public function __construct(GeneratedClassesCache $cache)
@@ -71,7 +69,17 @@ abstract class AbstractCollectionClassGenerator
         }
 
         $namespaceName = $context->namespacePrefix().'\\'.self::NAMESPACE_PREFIX;
-        $shortClassName = \ucfirst($itemTypeName).static::classNameSuffix();
+
+        // If union type
+        if (str_contains($itemTypeName, '|')) {
+            $types = \explode('|', $itemTypeName);
+            $types = \array_map(fn(string $type) => \ucfirst($type), $types);
+            $shortClassName = implode('Or', $types);
+        } else {
+            $shortClassName = \ucfirst($itemTypeName);
+        }
+
+        $shortClassName .= static::classNameSuffix();
 
         return ClassName::fromNamespaceAndName($namespaceName, $shortClassName);
     }
@@ -79,6 +87,14 @@ abstract class AbstractCollectionClassGenerator
     protected function defineOtherMethods(ClassType $classType, PHPType $itemType): self
     {
         return $this;
+    }
+
+    protected static function propertyDocType(PHPType $itemType): string
+    {
+        $types = \explode('|', $itemType->name());
+        $types = array_map(fn(string $type) => $type.'[]', $types);
+
+        return implode('|', $types);
     }
 
     private function defineProperty(ClassType $class, PHPType $itemType): self
@@ -183,9 +199,12 @@ abstract class AbstractCollectionClassGenerator
     {
         $class
             ->addMethod('jsonSerialize')
+            ->setReturnNullable(false)
+            ->setReturnType('array')
             ->addBody(
                 \sprintf('return $this->%s;', self::PROPERTY_NAME)
-            );
+            )
+        ;
 
         $class->addImplement(\JsonSerializable::class);
     }

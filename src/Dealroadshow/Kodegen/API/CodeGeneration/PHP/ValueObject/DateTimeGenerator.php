@@ -23,15 +23,7 @@ class DateTimeGenerator extends AbstractGenerator
         $this->phpType = new PHPType(self::VALUE_TYPE, self::VALUE_TYPE, false);
     }
 
-    /**
-     * @param ClassName                    $className
-     * @param StringType|DataTypeInterface $type
-     * @param Context                      $context
-     * @param PHPTypesService              $service
-     *
-     * @return PHPClass
-     */
-    public function generate(ClassName $className, DataTypeInterface $type, Context $context, PHPTypesService $service): PHPClass
+    public function generate(ClassName $className, DataTypeInterface|StringType $type, Context $context, PHPTypesService $service): PHPClass
     {
         $class = new ClassType($className->shortName());
 

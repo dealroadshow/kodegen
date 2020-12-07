@@ -38,9 +38,4 @@ class ListClassGenerator extends AbstractCollectionClassGenerator
     {
         return self::CLASS_NAME_SUFFIX;
     }
-
-    protected static function propertyDocType(PHPType $itemType): string
-    {
-        return \sprintf('%s[]|array', $itemType->name());
-    }
 }
