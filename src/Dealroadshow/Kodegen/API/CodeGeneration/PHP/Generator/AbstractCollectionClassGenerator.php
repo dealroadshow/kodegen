@@ -17,7 +17,7 @@ abstract class AbstractCollectionClassGenerator
     private GeneratedClassesCache $cache;
 
     abstract protected static function classNameSuffix(): string;
-    abstract protected function defineAddMethod(ClassType $class, PHPType $itemType): self;
+    abstract protected function defineAddMethod(ClassType $class, PHPType $itemType): static;
 
     public function __construct(GeneratedClassesCache $cache)
     {
@@ -45,7 +45,7 @@ abstract class AbstractCollectionClassGenerator
         return $phpClass;
     }
 
-    public function generateForClass(ClassType $class, PHPType $itemType): self
+    public function generateForClass(ClassType $class, PHPType $itemType): static
     {
         $this
             ->defineProperty($class, $itemType)
@@ -53,6 +53,7 @@ abstract class AbstractCollectionClassGenerator
             ->defineAddAllMethod($class, $itemType)
             ->defineAllMethod($class, $itemType)
             ->defineClearMethod($class)
+            ->defineCountMethod($class)
             ->defineConstructor($class)
             ->defineOtherMethods($class, $itemType)
         ;
@@ -84,7 +85,7 @@ abstract class AbstractCollectionClassGenerator
         return ClassName::fromNamespaceAndName($namespaceName, $shortClassName);
     }
 
-    protected function defineOtherMethods(ClassType $classType, PHPType $itemType): self
+    protected function defineOtherMethods(ClassType $classType, PHPType $itemType): static
     {
         return $this;
     }
@@ -97,7 +98,7 @@ abstract class AbstractCollectionClassGenerator
         return implode('|', $types);
     }
 
-    private function defineProperty(ClassType $class, PHPType $itemType): self
+    private function defineProperty(ClassType $class, PHPType $itemType): static
     {
         $class
             ->addProperty(self::PROPERTY_NAME)
@@ -115,7 +116,7 @@ abstract class AbstractCollectionClassGenerator
         return $this;
     }
 
-    private function defineAddAllMethod(ClassType $class, PHPType $itemType): self
+    private function defineAddAllMethod(ClassType $class, PHPType $itemType): static
     {
         $method = $class
             ->addMethod('addAll')
@@ -150,7 +151,7 @@ abstract class AbstractCollectionClassGenerator
         return $this;
     }
 
-    private function defineAllMethod(ClassType $class, PHPType $itemType): self
+    private function defineAllMethod(ClassType $class, PHPType $itemType): static
     {
         $method = $class
             ->addMethod('all')
@@ -169,7 +170,7 @@ abstract class AbstractCollectionClassGenerator
         return $this;
     }
 
-    private function defineClearMethod(ClassType $class): self
+    private function defineClearMethod(ClassType $class): static
     {
         $method = $class
             ->addMethod('clear')
@@ -186,7 +187,20 @@ abstract class AbstractCollectionClassGenerator
         return $this;
     }
 
-    private function defineConstructor(ClassType $class): self
+    private function defineCountMethod(ClassType $class): static
+    {
+        $class
+            ->addMethod('count')
+            ->setReturnType(PHPType::INT)
+            ->setReturnNullable(false)
+            ->addBody(
+                \sprintf('return count($this->%s);', self::PROPERTY_NAME)
+            );
+
+        return $this;
+    }
+
+    private function defineConstructor(ClassType $class): static
     {
         $class
             ->addMethod('__construct')
@@ -195,7 +209,7 @@ abstract class AbstractCollectionClassGenerator
         return $this;
     }
 
-    private function defineJsonSerializeMethod(ClassType $class)
+    private function defineJsonSerializeMethod(ClassType $class): static
     {
         $class
             ->addMethod('jsonSerialize')
@@ -207,5 +221,7 @@ abstract class AbstractCollectionClassGenerator
         ;
 
         $class->addImplement(\JsonSerializable::class);
+
+        return $this;
     }
 }

@@ -11,7 +11,7 @@ class MapClassGenerator extends AbstractCollectionClassGenerator
 {
     private const CLASS_NAME_SUFFIX = 'Map';
 
-    protected function defineAddMethod(ClassType $class, PHPType $itemType): self
+    protected function defineAddMethod(ClassType $class, PHPType $itemType): static
     {
         $method = $class
             ->addMethod('add')
@@ -38,7 +38,7 @@ class MapClassGenerator extends AbstractCollectionClassGenerator
         return $this;
     }
 
-    protected function defineOtherMethods(ClassType $classType, PHPType $itemType): AbstractCollectionClassGenerator
+    protected function defineOtherMethods(ClassType $classType, PHPType $itemType): static
     {
         $this
             ->defineHasMethod($classType)

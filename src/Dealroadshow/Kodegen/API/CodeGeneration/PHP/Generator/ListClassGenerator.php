@@ -9,7 +9,7 @@ class ListClassGenerator extends AbstractCollectionClassGenerator
 {
     private const CLASS_NAME_SUFFIX = 'List';
 
-    protected function defineAddMethod(ClassType $class, PHPType $itemType): AbstractCollectionClassGenerator
+    protected function defineAddMethod(ClassType $class, PHPType $itemType): static
     {
         $method = $class
             ->addMethod('add')
