@@ -6,7 +6,7 @@ use App\Github\FileTreeService;
 
 class JsonSchemaVersionsService
 {
-    private const GITHUB_USERNAME = 'instrumenta';
+    private const GITHUB_USERNAME = 'yannh';
     private const GITHUB_REPO = 'kubernetes-json-schema';
 
     private FileTreeService $treeService;
@@ -18,7 +18,7 @@ class JsonSchemaVersionsService
         $this->versionsService = $versionsService;
     }
 
-    public function latestVersionsMap(int $numberOfVersions)
+    public function latestVersionsMap(int $numberOfVersions): array
     {
         $latestMinorVersions = $this->versionsService->latestMinorReleases($numberOfVersions);
         $topLevelItems = $this->treeService->topLevelItems(

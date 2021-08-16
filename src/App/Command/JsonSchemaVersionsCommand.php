@@ -22,7 +22,7 @@ class JsonSchemaVersionsCommand extends Command
 
     public function __construct(JsonSchemaVersionsService $service)
     {
-        parent::__construct(null);
+        parent::__construct();
         $this->service = $service;
     }
 

@@ -4,7 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    dealroadshow.kodegen.json_schema.url_template: 'https://raw.githubusercontent.com/instrumenta/kubernetes-json-schema/master/{version}/_definitions.json'
+    dealroadshow.kodegen.json_schema.url_template: 'https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/{version}/_definitions.json'
     dealroadshow.kodegen.json_schema.versions: '%env(json:DEALROADSHOW_KODEGEN_JSON_SCHEMA_VERSIONS)%'
 
 services:
