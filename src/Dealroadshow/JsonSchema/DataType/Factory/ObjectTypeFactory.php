@@ -5,6 +5,7 @@ namespace Dealroadshow\JsonSchema\DataType\Factory;
 use Dealroadshow\JsonSchema\DataType\DataTypesService;
 use Dealroadshow\JsonSchema\DataType\ObjectType;
 use Dealroadshow\JsonSchema\DataType\PropertyDefinition;
+use Dealroadshow\JsonSchema\DataType\UnknownType;
 
 class ObjectTypeFactory implements TypeAwareFactoryInterface
 {
@@ -17,7 +18,8 @@ class ObjectTypeFactory implements TypeAwareFactoryInterface
         foreach ($schema['properties'] ?? [] as $name => $propertySchema) {
             $required = \in_array($name, $requiredProperties);
             $type = $service->determineType($propertySchema);
-            $property = new PropertyDefinition($name, $type, $required);
+            $nullable = !$type instanceof UnknownType && !$required;
+            $property = new PropertyDefinition($name, $type, $required, $nullable);
             $properties[$name] = $property;
 
             $description = $propertySchema['description'] ?? null;
@@ -27,7 +29,7 @@ class ObjectTypeFactory implements TypeAwareFactoryInterface
             }
         }
 
-        $additionalPropsType = \array_key_exists('additionalProperties', $schema)
+        $additionalPropsType = \array_key_exists('additionalProperties', $schema) && is_array($schema['additionalProperties'])
             ? $service->determineType($schema['additionalProperties'])
             : null;
 

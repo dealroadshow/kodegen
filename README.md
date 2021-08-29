@@ -15,5 +15,37 @@ composer global require dealroadshow/kodegen
 ```
 
 ## Usage
-In order to generate PHP code, just run `kodegen generate:php` command.
+
+### For generic json schemas
+In order to generate PHP code from generic json schema, 
+just run `kodegen json-schema:generate:php path/to/json-schema-file.json` command.
 It will guide you through the generation process interactively.
+
+### For Kubernetes json schema
+At first you want to determine the latest API versions for chosen Kubernetes version.
+For example, the latest json schema version for Kubernetes v1.20 is v1.20.10.
+In order to get this versions, run command `k8s:schema:versions [number of latest Kubernetes versions]`.
+
+The output of this command may look like follows:
+
+```
+bin/console k8s:schema:versions 4
+{"v1.18":"v1.18.20","v1.19":"v1.19.14","v1.20":"v1.20.10","v1.21":"v1.21.4","v1.22":"v1.22.0"}
+```
+
+After that you may use this json to retrieve Kubernetes json schema:
+
+```
+export DEALROADSHOW_KODEGEN_JSON_SCHEMA_VERSIONS='{"v1.18":"v1.18.20","v1.19":"v1.19.14","v1.20":"v1.20.10","v1.21":"v1.21.4","v1.22":"v1.22.0"}'
+bin/console k8s:schema:fetch /tmp/kubernetes-schema.json
+```
+
+The command above will let you chose one on Kubernetes versions, defined in `DEALROADSHOW_KODEGEN_JSON_SCHEMA_VERSIONS` env variable.
+
+When you have your Kubernetes json schema, you can generate PHP classes from it:
+
+```
+bin/console k8s:generate:php /tmp/kubernetes-schema.json
+```
+
+This command will guide you through the generation process interactively.

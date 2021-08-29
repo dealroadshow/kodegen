@@ -25,12 +25,12 @@ class PropertyDefinition
      */
     private ?\Closure $initializer = null;
 
-    public function __construct(string $name, DataTypeInterface $type, bool $required)
+    public function __construct(string $name, DataTypeInterface $type, bool $required, bool $nullable = null)
     {
         $this->name = \ltrim($name, '$');
         $this->type = $type;
         $this->required = $required;
-        $this->nullable = !$required;
+        $this->nullable = $nullable ?? !$required;
         $this->skipped = false;
     }
 

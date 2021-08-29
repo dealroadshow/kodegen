@@ -2,35 +2,32 @@
 
 namespace App\Command;
 
-use Dealroadshow\Kodegen\API\CodeGeneration\PHP\CodeGenerationService;
+use Dealroadshow\Kodegen\API\CodeGeneration\PHP\CodeGenerationServiceInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class GeneratePhpCommand extends Command
+abstract class AbstractCodeGenerationCommand extends Command
 {
-    protected static $defaultName = 'generate:php';
+    private const ARGUMENT_SCHEMA_PATH = 'jsonSchemaPath';
 
-    private CodeGenerationService $service;
-    private array $jsonSchemaVersions;
-    private string $jsonSchemaUrlTemplate;
-
-    public function __construct(CodeGenerationService $service, array $jsonSchemaVersions, string $jsonSchemaUrlTemplate)
+    public function __construct(protected CodeGenerationServiceInterface $service)
     {
-        $this->service = $service;
-        $this->jsonSchemaVersions = $jsonSchemaVersions;
-        $this->jsonSchemaUrlTemplate = $jsonSchemaUrlTemplate;
-
-        parent::__construct(null);
+        parent::__construct();
     }
 
     protected function configure()
     {
         $this
             ->setDescription('Generates PHP classes from Kubernetes json schema')
+            ->addArgument(
+                self::ARGUMENT_SCHEMA_PATH,
+                InputArgument::REQUIRED,
+                'Path to file containing valid json schema'
+            )
         ;
     }
 
@@ -38,37 +35,37 @@ class GeneratePhpCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $k8sVersion = $this->askForK8sVersion($io);
-        $schemaVersion = $this->jsonSchemaVersions[$k8sVersion];
-        $jsonSchemaUrl = \str_replace('{version}', $schemaVersion, $this->jsonSchemaUrlTemplate);
-        $namespacePrefix = $this->askForNamespacePrefix($io);
-        $rootDir = $this->askForRootDir($io);
+        $namespacePrefix = $this->getNamespacePrefix($io);
+        $rootDir = $this->getRootDir($io);
 
+        $jsonSchemaPath = $input->getArgument(self::ARGUMENT_SCHEMA_PATH);
+        if (!file_exists($jsonSchemaPath)) {
+            $io->error(sprintf('Json schema path "%s" does not exist.', $jsonSchemaPath));
+            $io->writeln('');
 
-        $this->service->generate($jsonSchemaUrl, $namespacePrefix, $rootDir);
+            return self::FAILURE;
+        }
+
+        $json = \file_get_contents($jsonSchemaPath);
+        $schema = \json_decode($json, true);
+        if (null === $schema && JSON_ERROR_NONE !== json_last_error()) {
+            $io->error(sprintf('File "%s" does not contain valid json', $jsonSchemaPath));
+            $io->writeln('');
+
+            return self::FAILURE;
+        }
+
+        $this->service->generate($schema, $namespacePrefix, $rootDir);
 
         $io->success(
             \sprintf('PHP code was saved to directory "%s"', $rootDir)
         );
         $io->writeln('');
 
-        return 0;
+        return self::SUCCESS;
     }
 
-    private function askForK8sVersion(SymfonyStyle $io): string
-    {
-        $question = new ChoiceQuestion(
-            'Please select your version of Kubernetes',
-            \array_keys($this->jsonSchemaVersions)
-        );
-        $question->setErrorMessage(
-            \sprintf('Please select variants from 0 to %d', \count($this->jsonSchemaVersions) - 1)
-        );
-
-        return $io->askQuestion($question);
-    }
-
-    private function askForNamespacePrefix(SymfonyStyle $io): string
+    private function getNamespacePrefix(SymfonyStyle $io): string
     {
         $question = new Question('Please specify namespace prefix for generated classes');
         $question->setValidator(function ($answer) {
@@ -82,7 +79,7 @@ class GeneratePhpCommand extends Command
         return $io->askQuestion($question);
     }
 
-    private function askForRootDir(SymfonyStyle $io): string
+    private function getRootDir(SymfonyStyle $io): string
     {
         $question = new Question('Please specify directory where to save PHP classes');
         $question->setValidator(function ($answer) {

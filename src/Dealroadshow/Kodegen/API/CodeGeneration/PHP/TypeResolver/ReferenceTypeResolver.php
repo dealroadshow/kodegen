@@ -18,7 +18,7 @@ class ReferenceTypeResolver extends AbstractTypeResolver
         private APIClassGenerator $apiClassGenerator,
         private DataClassGenerator $dataClassGenerator,
         private ValueObjectsService $valueObjectsService,
-        private OneOfResolver $unionTypesResolver
+        private UnionTypeResolver $unionTypesResolver
     ) {
     }
 

@@ -68,7 +68,7 @@ class APIClassGenerator extends AbstractGenerator
         return new APIClassGeneratedEvent($class);
     }
 
-    private function namespaceName(ApiObjectDefinition $definition, Context $context)
+    private function namespaceName(ApiObjectDefinition $definition, Context $context): string
     {
         $pattern = \sprintf('/%s$/', \preg_quote('.k8s.io'));
         $suffix = \preg_replace($pattern, '', $definition->group());

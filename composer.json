@@ -33,7 +33,7 @@
             "App\\": "src/App/"
         }
     },
-    "bin": ["bin/kodegen"],
+    "bin": ["bin/console"],
     "replace": {
         "paragonie/random_compat": "2.*",
         "symfony/polyfill-ctype": "*",
@@ -45,7 +45,7 @@
     },
     "scripts": {
         "auto-scripts": {
-            "bin/kodegen cache:clear": "script"
+            "bin/console cache:clear": "script"
         },
         "post-install-cmd": [
             "@auto-scripts"

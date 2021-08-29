@@ -2,15 +2,15 @@
 
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\TypeResolver;
 
+use Dealroadshow\JsonSchema\DataType\AbstractUnionType;
 use Dealroadshow\JsonSchema\DataType\DataTypeInterface;
-use Dealroadshow\JsonSchema\DataType\OneOfType;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Context;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\PHPTypesService;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\PHPType;
 
-class OneOfResolver extends AbstractTypeResolver
+class UnionTypeResolver extends AbstractTypeResolver
 {
-    public function resolve(DataTypeInterface|OneOfType $type, PHPTypesService $service, Context $context, bool $nullable): PHPType
+    public function resolve(DataTypeInterface|AbstractUnionType $type, PHPTypesService $service, Context $context, bool $nullable): PHPType
     {
         $types = $type->types();
         $union = [];
@@ -29,6 +29,6 @@ class OneOfResolver extends AbstractTypeResolver
 
     public function supports(DataTypeInterface $type): bool
     {
-        return $type instanceof OneOfType;
+        return $type instanceof AbstractUnionType;
     }
 }

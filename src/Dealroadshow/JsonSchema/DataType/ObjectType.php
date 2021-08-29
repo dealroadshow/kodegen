@@ -18,9 +18,9 @@ final class ObjectType extends AbstractType
     }
 
     /**
-     * @return array<string, PropertyDefinition>|PropertyDefinition[]
+     * @return PropertyDefinition[]
      */
-    public function properties()
+    public function properties(): iterable
     {
         return $this->properties;
     }

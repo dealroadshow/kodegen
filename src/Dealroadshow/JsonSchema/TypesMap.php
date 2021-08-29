@@ -49,7 +49,7 @@ class TypesMap implements \IteratorAggregate
     /**
      * @return \ArrayObject|array<string, DataTypeInterface>|DataTypeInterface[]
      */
-    public function getIterator()
+    public function getIterator(): iterable
     {
         return $this->map;
     }

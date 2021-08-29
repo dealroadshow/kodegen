@@ -9,12 +9,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class JsonSchemaVersionsCommand extends Command
+class K8SSchemaVersionsCommand extends Command
 {
     private const ARGUMENT_NAME = 'numberOfVersions';
     private const DEFAULT_NUMBER_OF_VERSIONS = 4;
 
-    protected static $defaultName = 'schema:versions';
+    protected static $defaultName = 'k8s:schema:versions';
     /**
      * @var JsonSchemaVersionsService
      */

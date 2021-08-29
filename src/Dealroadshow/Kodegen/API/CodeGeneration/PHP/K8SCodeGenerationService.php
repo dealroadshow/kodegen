@@ -2,13 +2,14 @@
 
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP;
 
+use App\Util\ClassUtil;
 use Dealroadshow\JsonSchema\JsonSchemaService;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Generator\APIClassGenerator;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Generator\BaseInterfacesGenerator;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\PHPClass;
 use Dealroadshow\Kodegen\API\Definitions\Objects\ObjectDefinitionsService;
 
-class CodeGenerationService
+class K8SCodeGenerationService implements CodeGenerationServiceInterface
 {
     private ObjectDefinitionsService $definitionsService;
     private JsonSchemaService $jsonSchemaService;
@@ -25,9 +26,9 @@ class CodeGenerationService
         $this->cache = $cache;
     }
 
-    public function generate(string $jsonSchemaUrl, string $namespacePrefix, string $rootDir)
+    public function generate(array $jsonSchema, string $namespacePrefix, string $rootDir): void
     {
-        $typesMap = $this->jsonSchemaService->typesMap($jsonSchemaUrl);
+        $typesMap = $this->jsonSchemaService->typesMap($jsonSchema);
         $definitionsMap = $this->definitionsService->topLevelDefinitionsMap($typesMap);
         $resourceInterface = $this->resourceInterface($namespacePrefix);
         $resourceListInterface = $this->resourceListInterface($namespacePrefix);
@@ -45,25 +46,9 @@ class CodeGenerationService
         }
 
         foreach ($this->cache as $fqcn => $class) {
-            $path = $this->filePathForClass($fqcn, $context);
+            $path = ClassUtil::filePathForClass($fqcn, $context);
             file_put_contents($path, $class->toString($context));
         }
-    }
-
-    private function filePathForClass(string $fqcn, Context $context): string
-    {
-        $pattern = sprintf('/^%s/', \preg_quote($context->namespacePrefix()));
-        $withoutNamespacePrefix = \preg_replace($pattern, '', $fqcn);
-        $relativePath = \str_replace('\\', DIRECTORY_SEPARATOR, $withoutNamespacePrefix);
-        $absPath = $context->rootDir().DIRECTORY_SEPARATOR.$relativePath.'.php';
-        $absPath = \str_replace('//', '/', $absPath);
-
-        $dir = \dirname($absPath);
-        if (!\file_exists($dir)) {
-            \mkdir(\dirname($absPath), 0777, true);
-        }
-
-        return $absPath;
     }
 
     private function resourceInterface(string $namespacePrefix): PHPClass

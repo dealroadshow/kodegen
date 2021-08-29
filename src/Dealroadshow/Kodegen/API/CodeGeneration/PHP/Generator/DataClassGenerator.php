@@ -16,10 +16,14 @@ class DataClassGenerator extends AbstractGenerator
     private const NAMESPACE_PREFIX = 'Data';
 
     private DataClassGenerationEvent $generationEvent;
+    private string $namespacePrefix = self::NAMESPACE_PREFIX;
 
     public function generate(string $definitionName, ObjectType $type, Context $context): PHPClass
     {
-        $namespaceName = $context->namespacePrefix().'\\'.self::NAMESPACE_PREFIX;
+        $namespaceName =  $context->namespacePrefix();
+        if ($this->namespacePrefix) {
+            $namespaceName .= '\\'.$this->namespacePrefix;
+        }
         $className = ClassName::fromDefinitionName($namespaceName, $definitionName);
         $this->generationEvent = new DataClassGenerationEvent($className, $context, $type);
 
@@ -29,6 +33,11 @@ class DataClassGenerator extends AbstractGenerator
             $type->properties(),
             $context
         );
+    }
+
+    public function setNamespacePrefix(string $namespacePrefix): void
+    {
+        $this->namespacePrefix = $namespacePrefix;
     }
 
     protected function getInterfaceName(PHPClass $phpClass, Context $context): ClassName
