@@ -18,25 +18,33 @@ composer global require dealroadshow/kodegen
 
 ### For generic json schemas
 In order to generate PHP code from generic json schema, 
-just run `kodegen json-schema:generate:php path/to/json-schema-file.json` command.
+just run the following command:
+```
+kodegen json-schema:generate:php path/to/json-schema-file.json
+```
+
 It will guide you through the generation process interactively.
 
 ### For Kubernetes json schema
 At first you want to determine the latest API versions for chosen Kubernetes version.
 For example, the latest json schema version for Kubernetes v1.20 is v1.20.10.
-In order to get this versions, run command `k8s:schema:versions [number of latest Kubernetes versions]`.
+In order to get this versions, run command:
+
+```
+k8s:schema:versions [number of latest Kubernetes versions].
+```
 
 The output of this command may look like follows:
 
 ```
 kodegen k8s:schema:versions 4
-{"v1.18":"v1.18.20","v1.19":"v1.19.14","v1.20":"v1.20.10","v1.21":"v1.21.4","v1.22":"v1.22.0"}
+{"v1.19":"v1.19.14","v1.20":"v1.20.10","v1.21":"v1.21.4","v1.22":"v1.22.0"}
 ```
 
 After that you may use this json to retrieve Kubernetes json schema:
 
 ```
-export DEALROADSHOW_KODEGEN_JSON_SCHEMA_VERSIONS='{"v1.18":"v1.18.20","v1.19":"v1.19.14","v1.20":"v1.20.10","v1.21":"v1.21.4","v1.22":"v1.22.0"}'
+export DEALROADSHOW_KODEGEN_JSON_SCHEMA_VERSIONS='{"v1.19":"v1.19.14","v1.20":"v1.20.10","v1.21":"v1.21.4","v1.22":"v1.22.0"}'
 kodegen k8s:schema:fetch /tmp/kubernetes-schema.json
 ```
 
