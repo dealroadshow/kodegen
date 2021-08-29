@@ -5,20 +5,20 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": "^8.0",
+        "php": ">=8.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
         "guzzlehttp/psr7": "^2.0",
         "knplabs/github-api": "^3.0@dev",
         "nette/php-generator": "^3.5",
-        "symfony/console": "5.2.*",
-        "symfony/dotenv": "5.2.*",
+        "symfony/console": ">=5.2",
+        "symfony/dotenv": ">=5.2",
         "symfony/flex": "^1.11",
-        "symfony/framework-bundle": "5.2.*",
-        "symfony/http-client": "5.2.*",
+        "symfony/framework-bundle": ">=5.2",
+        "symfony/http-client": ">=5.2",
         "symfony/maker-bundle": "^1.20",
-        "symfony/yaml": "5.2.*"
+        "symfony/yaml": ">=5.2"
     },
     "config": {
         "optimize-autoloader": true,
@@ -60,7 +60,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "5.2.*"
+            "require": "5.3.*"
         }
     },
     "description": "Generates PHP classes for Kubernetes API objects"
