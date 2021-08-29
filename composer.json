@@ -33,7 +33,7 @@
             "App\\": "src/App/"
         }
     },
-    "bin": ["bin/console"],
+    "bin": ["bin/kodegen"],
     "replace": {
         "paragonie/random_compat": "2.*",
         "symfony/polyfill-ctype": "*",
@@ -63,5 +63,5 @@
             "require": "5.3.*"
         }
     },
-    "description": "Generates PHP classes for Kubernetes API objects"
+    "description": "Generates PHP classes from json schema, including Kubernetes json schema"
 }
