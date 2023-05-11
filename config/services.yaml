@@ -6,6 +6,19 @@
 parameters:
     dealroadshow.kodegen.json_schema.url_template: 'https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/{version}/_definitions.json'
     dealroadshow.kodegen.json_schema.versions: '%env(json:DEALROADSHOW_KODEGEN_JSON_SCHEMA_VERSIONS)%'
+    # Sometimes metadata type defined as `object` in some CRDs, for example in CRDs, defined by Upbound AWS Provider.
+    # Specifying env var `DEALROADSHOW_KODEGEN_METADATA_OBJECT_CLASS` will replace `metadata` property type in such
+    # classes to the value of this env var (probably FQCN). This may be needed if you don't want to generate
+    # new class for each metadata property in dozens of CRD classes, or if you want your classes to be compatible
+    # with some library, for example with `dealroadshow/k8s-resources`, where APIResourceInterface requires
+    # method `metadata()` to return it's "own" `ObjectMeta` instance
+    dealroadshow.kodegen.k8s.crd_metadata_class: '%env(default::DEALROADSHOW_KODEGEN_CRD_METADATA_CLASS)%'
+    # You may want to replace default generated `ObjectMeta` class type for `metadata` properties
+    # with some predefined type, for example `Dealroadshow\K8S\Data\ObjectMeta` for your classes
+    # to be compatible with `dealroadshow/k8s-resources` and `dealroadshow/k8s-framework` libraries.
+    # Specifying this env var `DEALROADSHOW_KODEGEN_METADATA_CLASS` will result in type of `metadata` properties
+    # to be replaced with the value of this env var (probably FQCN)
+    dealroadshow.kodegen.k8s.metadata_class: '%env(default::DEALROADSHOW_KODEGEN_METADATA_CLASS)%'
 
 services:
     # default configuration for services in *this* file
@@ -16,6 +29,8 @@ services:
             $srcDir: '%kernel.project_dir%/src'
             $jsonSchemaUrlTemplate: '%dealroadshow.kodegen.json_schema.url_template%'
             $jsonSchemaVersions: '%dealroadshow.kodegen.json_schema.versions%'
+            $crdMetadataClass: '%dealroadshow.kodegen.k8s.crd_metadata_class%'
+            $metadataClass: '%dealroadshow.kodegen.k8s.metadata_class%'
     _instanceof:
         Dealroadshow\JsonSchema\DataType\Factory\DataTypeFactoryInterface:
             tags: ['dealroadshow.json_schema.data_type.factory']

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -26,12 +28,12 @@ class Kernel extends BaseKernel implements CompilerPassInterface
         }
     }
 
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $this->hideSystemCommands($container);
     }
 
-    private function hideSystemCommands(ContainerBuilder $container)
+    private function hideSystemCommands(ContainerBuilder $container): void
     {
         $ids = \array_keys($container->findTaggedServiceIds('console.command'));
 

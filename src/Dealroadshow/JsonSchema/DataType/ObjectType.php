@@ -1,20 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\JsonSchema\DataType;
 
 final class ObjectType extends AbstractType
 {
-    protected array $properties;
-    private ?DataTypeInterface $additionalPropertiesType;
-
     /**
      * @param DataTypeInterface[]|array<string, DataTypeInterface> $properties
      * @param DataTypeInterface|null                               $additionalPropertiesType
      */
-    public function __construct(array $properties, ?DataTypeInterface $additionalPropertiesType)
+    public function __construct(protected array $properties, private DataTypeInterface|null $additionalPropertiesType)
     {
-        $this->properties = $properties;
-        $this->additionalPropertiesType = $additionalPropertiesType;
     }
 
     /**

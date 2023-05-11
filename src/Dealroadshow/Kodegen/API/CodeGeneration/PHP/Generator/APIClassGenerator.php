@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Generator;
 
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Context;
@@ -19,6 +21,7 @@ class APIClassGenerator extends AbstractGenerator
     {
         $namespaceName = $this->namespaceName($definition, $context);
         $shortName = ucfirst($definition->kind());
+        $shortName = $this->validClassName($shortName);
         $className = ClassName::fromNamespaceAndName($namespaceName, $shortName);
         $this->generationEvent = new APIClassGenerationEvent($className, $context, $definition);
 
@@ -43,10 +46,11 @@ class APIClassGenerator extends AbstractGenerator
 
         $returnType = $phpClass->classType()->getMethod('metadata')->getReturnType();
         $metaClassName = ClassName::fromFQCN($returnType)->shortName();
+
         if ('ObjectMeta' === $metaClassName) {
-            return $context->resourceInterface();
+            return $context->resourceInterface;
         } elseif ('ListMeta' === $metaClassName) {
-            return $context->resourceListInterface();
+            return $context->resourceListInterface;
         }
 
         throw new \LogicException(
@@ -78,11 +82,20 @@ class APIClassGenerator extends AbstractGenerator
         }
         $suffix = \ucfirst($suffix);
 
-        $namespaceName = $context->namespacePrefix().'\\API';
+        $namespaceName = $context->namespacePrefix.'\\API';
         if ($suffix) {
             $namespaceName .= '\\'.$suffix;
         }
 
         return $namespaceName;
+    }
+
+    private function validClassName(string $className): string
+    {
+        return match ($className) {
+            'Function' => 'TheFunction',
+            'Object' => 'TheObject',
+            default => $className,
+        };
     }
 }

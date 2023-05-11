@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Generator;
 
 use Nette\PhpGenerator\ClassType;
@@ -8,6 +10,7 @@ use Dealroadshow\Kodegen\API\CodeGeneration\PHP\GeneratedClassesCache;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\ClassName;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\PHPClass;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\PHPType;
+use Nette\PhpGenerator\Parameter;
 
 abstract class AbstractCollectionClassGenerator
 {
@@ -17,6 +20,7 @@ abstract class AbstractCollectionClassGenerator
     private GeneratedClassesCache $cache;
 
     abstract protected static function classNameSuffix(): string;
+    abstract protected function defineAddAllMethodBody(ClassType $class, PHPType $itemType, Parameter $param): string;
     abstract protected function defineAddMethod(ClassType $class, PHPType $itemType): static;
 
     public function __construct(GeneratedClassesCache $cache)
@@ -63,18 +67,18 @@ abstract class AbstractCollectionClassGenerator
 
     protected function className(PHPType $type, Context $context): ClassName
     {
-        $itemTypeName = $type->name();
+        $itemTypeName = $type->name;
         if (ClassName::isFQCN($itemTypeName)) {
             $itemClassName = ClassName::fromFQCN($itemTypeName);
             $itemTypeName = $itemClassName->shortName();
         }
 
-        $namespaceName = $context->namespacePrefix().'\\'.self::NAMESPACE_PREFIX;
+        $namespaceName = $context->namespacePrefix.'\\'.self::NAMESPACE_PREFIX;
 
         // If union type
         if (str_contains($itemTypeName, '|')) {
             $types = \explode('|', $itemTypeName);
-            $types = \array_map(fn(string $type) => \ucfirst($type), $types);
+            $types = \array_map(fn (string $type) => \ucfirst($type), $types);
             $shortClassName = implode('Or', $types);
         } else {
             $shortClassName = \ucfirst($itemTypeName);
@@ -92,8 +96,8 @@ abstract class AbstractCollectionClassGenerator
 
     protected static function propertyDocType(PHPType $itemType): string
     {
-        $types = \explode('|', $itemType->name());
-        $types = array_map(fn(string $type) => $type.'[]', $types);
+        $types = \explode('|', $itemType->name);
+        $types = array_map(fn (string $type) => $type.'[]', $types);
 
         return implode('|', $types);
     }
@@ -138,18 +142,14 @@ abstract class AbstractCollectionClassGenerator
 
         $method
             ->addBody(
-                \sprintf(
-                    '$this->%s = array_merge($this->%s, $%s);',
-                    self::PROPERTY_NAME,
-                    self::PROPERTY_NAME,
-                    $param->getName()
-                )
+                $this->defineAddAllMethodBody($class, $itemType, $param)
             )
             ->addBody('')
             ->addBody('return $this;');
 
         return $this;
     }
+
 
     private function defineAllMethod(ClassType $class, PHPType $itemType): static
     {

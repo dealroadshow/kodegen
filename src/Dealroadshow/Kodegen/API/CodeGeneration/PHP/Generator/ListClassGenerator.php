@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Generator;
 
 use Nette\PhpGenerator\ClassType;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\PHPType;
+use Nette\PhpGenerator\Parameter;
 
 class ListClassGenerator extends AbstractCollectionClassGenerator
 {
@@ -17,7 +20,7 @@ class ListClassGenerator extends AbstractCollectionClassGenerator
             ->setReturnNullable(false);
         $valueParam = $method
             ->addParameter('value')
-            ->setType($itemType->name())
+            ->setType($itemType->name)
             ->setNullable(false);
 
         $method
@@ -32,6 +35,18 @@ class ListClassGenerator extends AbstractCollectionClassGenerator
             ->addBody('return $this;');
 
         return $this;
+    }
+
+    protected function defineAddAllMethodBody(ClassType $class, PHPType $itemType, Parameter $param): string
+    {
+        return \sprintf(
+            <<<'BODY'
+            foreach ($%s as $value) {
+                $this->add($value);
+            }
+            BODY,
+            $param->getName()
+        );
     }
 
     protected static function classNameSuffix(): string

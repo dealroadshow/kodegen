@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type;
 
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Context;
@@ -11,15 +13,11 @@ use Nette\PhpGenerator\Property;
 
 class PHPClass
 {
-    private ClassName $name;
-    private ClassType $class;
     private array $uses;
     private array $lines;
 
-    public function __construct(ClassName $name, ClassType $class)
+    public function __construct(private readonly ClassName $name, private readonly ClassType $class, public readonly bool $isExternal = false)
     {
-        $this->name = $name;
-        $this->class = $class;
         $this->uses = [];
         $this->lines = [];
     }
@@ -31,11 +29,19 @@ class PHPClass
 
     public function classType(): ClassType
     {
+        if ($this->isExternal) {
+            throw new \LogicException('ClassType instance is dummy in external PHP classes');
+        }
+
         return $this->class;
     }
 
     public function toString(Context $context): string
     {
+        if ($this->isExternal) {
+            throw new \LogicException('External PHP classes should not be generated');
+        }
+
         $this->sortMethods();
 
         $this
@@ -163,7 +169,7 @@ class PHPClass
      * @param ClassName       $className
      * @param Method|Property $commentAware
      */
-    private function deleteClassNamespaceComment(ClassName $className, $commentAware)
+    private function deleteClassNamespaceComment(ClassName $className, $commentAware): void
     {
         $comment = $commentAware->getComment();
         if ($comment) {
@@ -175,7 +181,7 @@ class PHPClass
     /**
      * @param Method|Property $commentAware
      */
-    private function deleteCurrentNamespaceFromComment($commentAware)
+    private function deleteCurrentNamespaceFromComment($commentAware): void
     {
         $comment = $commentAware->getComment();
         if ($comment) {
@@ -184,7 +190,7 @@ class PHPClass
         }
     }
 
-    private function addUse(ClassName $className)
+    private function addUse(ClassName $className): void
     {
         if ($className->namespace() !== $this->name->namespace()) {
             $this->useClass($className);
@@ -212,7 +218,7 @@ class PHPClass
     {
         $pattern = \sprintf(
             '/%s\\\([a-z0-9][\\\]?)+/i',
-            \preg_quote($context->namespacePrefix())
+            \preg_quote($context->namespacePrefix)
         );
         \preg_match_all($pattern, $text, $matches);
 
@@ -228,7 +234,7 @@ class PHPClass
         return $text;
     }
 
-    private function sortMethods()
+    private function sortMethods(): void
     {
         $class = $this->class;
         $sortFunc = function (Method $lhs, Method $rhs) {

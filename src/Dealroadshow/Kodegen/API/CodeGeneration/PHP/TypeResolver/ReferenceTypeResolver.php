@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\TypeResolver;
 
 use Dealroadshow\JsonSchema\DataType\DataTypeInterface;
@@ -10,16 +12,11 @@ use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Context;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Generator\DataClassGenerator;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\PHPTypesService;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\PHPType;
-use Dealroadshow\Kodegen\API\CodeGeneration\PHP\ValueObjectsService;
 
 class ReferenceTypeResolver extends AbstractTypeResolver
 {
-    public function __construct(
-        private APIClassGenerator $apiClassGenerator,
-        private DataClassGenerator $dataClassGenerator,
-        private ValueObjectsService $valueObjectsService,
-        private UnionTypeResolver $unionTypesResolver
-    ) {
+    public function __construct(private APIClassGenerator $apiClassGenerator, private DataClassGenerator $dataClassGenerator)
+    {
     }
 
     public function supports(DataTypeInterface $type): bool
@@ -31,10 +28,11 @@ class ReferenceTypeResolver extends AbstractTypeResolver
         DataTypeInterface|ReferenceType $type,
         PHPTypesService $service,
         Context $context,
-        bool $nullable
+        bool $nullable,
+        array $runtimeParams
     ): PHPType {
-        $definitions = $context->definitions();
-        $types = $context->types();
+        $definitions = $context->definitions;
+        $types = $context->types;
 
         $definitionName = $type->referencedDefinitionName();
 
@@ -46,13 +44,13 @@ class ReferenceTypeResolver extends AbstractTypeResolver
             if (!$type instanceof ObjectType) {
                 return $service->resolveType($type, $context, $nullable);
             }
-            $class = $this->dataClassGenerator->generate($definitionName, $type, $context);
+            $class = $this->dataClassGenerator->generateFromDefinitionName($definitionName, $type, $context);
         } else {
             throw new \LogicException(
                 sprintf('Unknown definition name "%s"', $definitionName)
             );
         }
 
-        return new PHPType($class->name()->fqcn(),$class->name()->fqcn() , $nullable);
+        return new PHPType($class->name()->fqcn(), $class->name()->fqcn(), $nullable);
     }
 }

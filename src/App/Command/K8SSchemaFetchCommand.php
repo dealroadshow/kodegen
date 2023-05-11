@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -25,7 +27,7 @@ class K8SSchemaFetchCommand extends Command
         parent::__construct();
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this
             ->setDescription('Fetches Kubernetes json schema and saves to file')
@@ -78,7 +80,7 @@ class K8SSchemaFetchCommand extends Command
                 \sprintf(
                     "Cannot fetch json schema from URL '%s':\n%s with message:\n%s",
                     $jsonSchemaUrl,
-                    \get_class($e),
+                    $e::class,
                     $e->getMessage()
                 )
             );

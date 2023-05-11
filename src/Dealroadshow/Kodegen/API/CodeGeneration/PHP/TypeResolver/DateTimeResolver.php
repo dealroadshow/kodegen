@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\TypeResolver;
 
 use Dealroadshow\JsonSchema\DataType\DataTypeInterface;
@@ -21,9 +23,9 @@ class DateTimeResolver extends AbstractTypeResolver
     {
     }
 
-    public function resolve(DataTypeInterface $type, PHPTypesService $service, Context $context, bool $nullable): PHPType
+    public function resolve(DataTypeInterface $type, PHPTypesService $service, Context $context, bool $nullable, array $runtimeParams): PHPType
     {
-        $namespaceName = $context->namespacePrefix().'\\'.self::NAMESPACE_PREFIX;
+        $namespaceName = $context->namespacePrefix.'\\'.self::NAMESPACE_PREFIX;
         $className = ClassName::fromNamespaceAndName($namespaceName, self::GENERATED_CLASS_NAME);
         $fqcn = $className->fqcn();
         if (!$this->cache->has($fqcn)) {

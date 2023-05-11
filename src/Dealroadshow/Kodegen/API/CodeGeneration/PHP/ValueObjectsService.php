@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP;
 
 use Dealroadshow\JsonSchema\DataType\DataTypeInterface;
@@ -48,14 +50,14 @@ class ValueObjectsService
             \sprintf(
                 'There are no generators able to create VO class for definition "%s" with type "%s"',
                 $definitionName,
-                \get_class($type)
+                $type::class
             )
         );
     }
 
     private function createClassName(string $definitionName, Context $context): ClassName
     {
-        $namespaceName = $context->namespacePrefix().'\\ValueObject';
+        $namespaceName = $context->namespacePrefix.'\\ValueObject';
 
         return ClassName::fromDefinitionName($namespaceName, $definitionName);
     }

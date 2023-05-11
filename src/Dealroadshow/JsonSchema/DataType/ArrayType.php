@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\JsonSchema\DataType;
 
 final class ArrayType extends AbstractType
 {
-    const NAME = 'array';
+    public const NAME = 'array';
 
     private DataTypeInterface $itemType;
 

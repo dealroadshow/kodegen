@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP;
 
 use Dealroadshow\JsonSchema\DataType\DataTypeInterface;
@@ -15,19 +17,19 @@ class PHPTypesService
 
     public function __construct(iterable $typeResolvers)
     {
-       $this->typeResolvers = $typeResolvers;
+        $this->typeResolvers = $typeResolvers;
     }
 
-    public function resolveType(DataTypeInterface $type, Context $context, bool $nullable): PHPType
+    public function resolveType(DataTypeInterface $type, Context $context, bool $nullable, array $runtimeParams = []): PHPType
     {
         foreach ($this->typeResolvers as $resolver) {
             if ($resolver->supports($type)) {
-                return $resolver->resolve($type, $this, $context, $nullable);
+                return $resolver->resolve($type, $this, $context, $nullable, $runtimeParams);
             }
         }
 
         throw new \LogicException(
-            sprintf('There are no resolvers for type "%s"', \get_class($type))
+            sprintf('There are no resolvers for type "%s"', $type::class)
         );
     }
 }

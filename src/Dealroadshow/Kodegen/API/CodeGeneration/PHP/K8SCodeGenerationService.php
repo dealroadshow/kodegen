@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP;
 
 use App\Util\ClassUtil;
 use Dealroadshow\JsonSchema\JsonSchemaService;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Generator\APIClassGenerator;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Generator\BaseInterfacesGenerator;
+use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\ClassName;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\PHPClass;
 use Dealroadshow\Kodegen\API\Definitions\Objects\ObjectDefinitionsService;
 
@@ -26,26 +29,30 @@ class K8SCodeGenerationService implements CodeGenerationServiceInterface
         $this->cache = $cache;
     }
 
-    public function generate(array $jsonSchema, string $namespacePrefix, string $rootDir): void
+    public function generate(array $jsonSchema, string $namespacePrefix, string $rootDir, ClassName $resourceInterface = null, ClassName $resourceListInterface = null): void
     {
         $typesMap = $this->jsonSchemaService->typesMap($jsonSchema);
         $definitionsMap = $this->definitionsService->topLevelDefinitionsMap($typesMap);
-        $resourceInterface = $this->resourceInterface($namespacePrefix);
-        $resourceListInterface = $this->resourceListInterface($namespacePrefix);
+        $resourceInterface = $resourceInterface ?: $this->resourceInterface($namespacePrefix)->name();
+        $resourceListInterface = $resourceListInterface ?: $this->resourceListInterface($namespacePrefix)->name();
         $context = ContextBuilder::instance()
             ->setDefinitions($definitionsMap)
             ->setTypes($typesMap)
-            ->setRootDir($rootDir)
+            ->setOutputDir($rootDir)
             ->setNamespacePrefix($namespacePrefix)
-            ->setResourceInterface($resourceInterface->name())
-            ->setResourceListInterface($resourceListInterface->name())
+            ->setResourceInterface($resourceInterface)
+            ->setResourceListInterface($resourceListInterface)
             ->build();
 
-        foreach ($context->definitions() as $definition) {
+        foreach ($context->definitions as $definition) {
             $this->classGenerator->generate($definition, $context);
         }
 
         foreach ($this->cache as $fqcn => $class) {
+            /** @var PHPClass $class */
+            if ($class->isExternal) {
+                continue;
+            }
             $path = ClassUtil::filePathForClass($fqcn, $context);
             file_put_contents($path, $class->toString($context));
         }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -8,16 +10,13 @@ use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Event\CodeGeneration\APIClassGen
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Event\CodeGeneration\DataClassGeneratedEvent;
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\GeneratedClassesCache;
 
-class RemoveObjectSettersSubscriber implements EventSubscriberInterface
+readonly class RemoveObjectSettersSubscriber implements EventSubscriberInterface
 {
-    private GeneratedClassesCache $cache;
-
-    public function __construct(GeneratedClassesCache $cache)
+    public function __construct(private GeneratedClassesCache $cache)
     {
-        $this->cache = $cache;
     }
 
-    public function onClassGenerated(AbstractPHPClassEvent $event)
+    public function onClassGenerated(AbstractPHPClassEvent $event): void
     {
         $phpClass = $event->getClass();
         $classType = $phpClass->classType();
@@ -28,13 +27,15 @@ class RemoveObjectSettersSubscriber implements EventSubscriberInterface
                 continue; // Not a class name
             }
             $phpClass = $this->cache->get($propertyType);
-            $propertyClass = $phpClass->classType();
-            if (!$propertyClass->hasMethod('__construct')) {
-                continue;
-            }
-            $constructor = $propertyClass->getMethod('__construct');
-            if (0 !== count($constructor->getParameters())) {
-                continue;
+            if (!$phpClass->isExternal) {
+                $propertyClass = $phpClass->classType();
+                if (!$propertyClass->hasMethod('__construct')) {
+                    continue;
+                }
+                $constructor = $propertyClass->getMethod('__construct');
+                if (0 !== count($constructor->getParameters())) {
+                    continue;
+                }
             }
 
             $propertyName = $property->getName();
@@ -52,7 +53,7 @@ class RemoveObjectSettersSubscriber implements EventSubscriberInterface
         }
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             APIClassGeneratedEvent::class => 'onClassGenerated',

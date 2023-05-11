@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\TypeResolver;
 
 use Dealroadshow\JsonSchema\DataType\BoolType;
@@ -18,7 +20,7 @@ class ScalarResolver extends AbstractTypeResolver
         NumberType::class => PHPType::FLOAT,
     ];
 
-    public function resolve(DataTypeInterface $type, PHPTypesService $service, Context $context, bool $nullable): PHPType
+    public function resolve(DataTypeInterface $type, PHPTypesService $service, Context $context, bool $nullable, array $runtimeParams): PHPType
     {
         $phpType = $this->phpType($type);
         if ($nullable) {
@@ -30,11 +32,11 @@ class ScalarResolver extends AbstractTypeResolver
 
     public function supports(DataTypeInterface $type): bool
     {
-        return \array_key_exists(\get_class($type), self::TYPES_MAP);
+        return \array_key_exists($type::class, self::TYPES_MAP);
     }
 
     protected function phpType(DataTypeInterface $type): string
     {
-        return self::TYPES_MAP[\get_class($type)];
+        return self::TYPES_MAP[$type::class];
     }
 }
