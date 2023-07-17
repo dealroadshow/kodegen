@@ -55,6 +55,6 @@ class ReplaceMetadataTypeProcessor extends AbstractPropertyDefinitionProcessor
         ClassType $class,
         Context $context
     ): bool {
-        return 'metadata' === $property->name() && $property->type() instanceof ReferenceType && null === $this->metadataClass;
+        return 'metadata' === $property->name() && $property->type() instanceof ReferenceType && null !== $this->metadataClass;
     }
 }
