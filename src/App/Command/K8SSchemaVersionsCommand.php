@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Kubernetes\JsonSchemaVersionsService;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'k8s:schema:versions',
+    description: 'This command retrieves the latest json schema versions for a number of Kubernetes minor versions. This json schema versions then can be used to retrieve the latest json schema for some minor Kubernetes version. For example the latest json schema version for Kubernetes v1.16 is v1.16.4.'
+)]
 class K8SSchemaVersionsCommand extends Command
 {
     private const ARGUMENT_NAME = 'numberOfVersions';
@@ -30,16 +35,7 @@ class K8SSchemaVersionsCommand extends Command
 
     protected function configure(): void
     {
-        $description = <<<DESCRIPTION
-            This command retrieves the latest json schema versions for a number of
-            Kubernetes minor versions. This json schema versions then can be used
-            to retrieve the latest json schema for some minor Kubernetes version.
-            For example the latest json schema version for Kubernetes v1.16 is v1.16.4.
-            DESCRIPTION;
-        $description = \str_replace(PHP_EOL, ' ', $description);
-
         $this
-            ->setDescription($description)
             ->addArgument(
                 self::ARGUMENT_NAME,
                 InputArgument::OPTIONAL,

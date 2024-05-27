@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Processor\Property;
 
 use Dealroadshow\JsonSchema\DataType\PropertyDefinition;
@@ -55,6 +57,9 @@ class ReplaceMetadataTypeProcessor extends AbstractPropertyDefinitionProcessor
         ClassType $class,
         Context $context
     ): bool {
-        return 'metadata' === $property->name() && $property->type() instanceof ReferenceType && null !== $this->metadataClass;
+        return 'metadata' === $property->name()
+            && $property->type() instanceof ReferenceType
+            && null !== $this->metadataClass
+            && !str_ends_with($className->shortName(), 'List');
     }
 }

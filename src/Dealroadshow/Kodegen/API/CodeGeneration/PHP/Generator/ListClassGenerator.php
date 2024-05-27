@@ -41,10 +41,10 @@ class ListClassGenerator extends AbstractCollectionClassGenerator
     {
         return \sprintf(
             <<<'BODY'
-            foreach ($%s as $value) {
-                $this->add($value);
-            }
-            BODY,
+                foreach ($%s as $value) {
+                    $this->add($value);
+                }
+                BODY,
             $param->getName()
         );
     }

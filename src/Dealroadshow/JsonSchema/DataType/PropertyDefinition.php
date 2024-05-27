@@ -27,7 +27,7 @@ class PropertyDefinition
      * Closure will receive three parameters:
      * \Nette\Property instance, \Nette\Method instance (constructor) and \Nette\ClassType instance
      *
-     * It can than use this arguments to generate some code in constructor
+     * It can than use these arguments to generate some code in constructor
      */
     private ?\Closure $initializer = null;
 
