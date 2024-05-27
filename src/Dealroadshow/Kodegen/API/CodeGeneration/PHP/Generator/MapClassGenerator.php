@@ -44,10 +44,10 @@ class MapClassGenerator extends AbstractCollectionClassGenerator
     {
         return \sprintf(
             <<<'BODY'
-            foreach ($%s as $key => $value) {
-                $this->add($key, $value);
-            }
-            BODY,
+                foreach ($%s as $key => $value) {
+                    $this->add($key, $value);
+                }
+                BODY,
             $param->getName()
         );
     }

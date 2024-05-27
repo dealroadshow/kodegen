@@ -202,7 +202,7 @@ abstract class AbstractGenerator
         $description = $definition->description();
         if (null !== $description) {
             $property
-                ->addComment($description)
+                ->addComment(str_replace('*/', '*\/', $description))
                 ->addComment(' ');
         }
         if ($type->docType !== $type->name) {

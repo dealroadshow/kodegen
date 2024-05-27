@@ -63,6 +63,6 @@ class ReleasesService
         $minorReleases = \array_keys($minorReleases);
         \usort($minorReleases, 'version_compare');
 
-        return \array_slice($minorReleases, -($numberOfReleases+1));
+        return \array_slice($minorReleases, -($numberOfReleases + 1));
     }
 }

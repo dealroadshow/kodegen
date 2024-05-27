@@ -32,6 +32,10 @@ class ReferencePropertyProcessor extends AbstractPropertyProcessor
 
         $phpClass = $this->cache->get($fqcn);
 
+        if ($phpClass->isExternal) {
+            return;
+        }
+
         if (!$phpClass->classType()->hasMethod('__construct')) {
             return;
         }

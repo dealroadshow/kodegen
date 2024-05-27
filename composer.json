@@ -12,13 +12,12 @@
         "guzzlehttp/psr7": "^2.0",
         "knplabs/github-api": "^3.0@dev",
         "nette/php-generator": "^3.5",
-        "symfony/console": ">=6.0",
-        "symfony/dotenv": ">=6.0",
+        "symfony/console": ">=7.0",
+        "symfony/dotenv": ">=7.0",
         "symfony/flex": "^1.11",
-        "symfony/framework-bundle": ">=6.0",
-        "symfony/http-client": ">=6.0",
-        "symfony/maker-bundle": "^1.20",
-        "symfony/yaml": ">=6.0"
+        "symfony/framework-bundle": ">=7.0",
+        "symfony/http-client": ">=7.0",
+        "symfony/yaml": ">=7.0"
     },
     "config": {
         "optimize-autoloader": true,
@@ -63,8 +62,8 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false,
-            "require": "6.0.*"
+            "allow-contrib": true,
+            "require": "7.0.*"
         }
     },
     "description": "Generates PHP classes from json schema, including Kubernetes json schema"

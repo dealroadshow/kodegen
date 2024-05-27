@@ -22,7 +22,7 @@ abstract class AbstractCodeGenerationCommand extends Command
     private const OPTION_RESOURCE_INTERFACE = 'resource-interface';
     private const OPTION_RESOURCE_LIST_INTERFACE = 'resource-list-interface';
 
-    public function __construct(protected CodeGenerationServiceInterface $service)
+    public function __construct(protected readonly CodeGenerationServiceInterface $service)
     {
         parent::__construct();
     }
@@ -30,7 +30,6 @@ abstract class AbstractCodeGenerationCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Generates PHP classes from Kubernetes json schema')
             ->addArgument(
                 self::ARGUMENT_SCHEMA_PATH,
                 InputArgument::REQUIRED,
@@ -66,9 +65,9 @@ abstract class AbstractCodeGenerationCommand extends Command
         $namespacePrefix = $this->getNamespacePrefix($input, $io);
         $outputDir = $this->getOutputDir($input, $io);
         $resourceInterface = $input->getOption(self::OPTION_RESOURCE_INTERFACE);
-        $resourceInterface = $resourceInterface ? ClassName::fromFQCN($resourceInterface): null;
+        $resourceInterface = $resourceInterface ? ClassName::fromFQCN($resourceInterface) : null;
         $resourceListInterface = $input->getOption(self::OPTION_RESOURCE_LIST_INTERFACE);
-        $resourceListInterface = $resourceListInterface ? ClassName::fromFQCN($resourceListInterface): null;
+        $resourceListInterface = $resourceListInterface ? ClassName::fromFQCN($resourceListInterface) : null;
 
         $jsonSchemaPath = $input->getArgument(self::ARGUMENT_SCHEMA_PATH);
         if (!file_exists($jsonSchemaPath)) {
@@ -148,7 +147,7 @@ abstract class AbstractCodeGenerationCommand extends Command
         }
 
         $question = new Question('Please specify directory where to save PHP classes');
-        $question->setValidator();
+        $question->setValidator($validator);
 
         return $io->askQuestion($question);
     }

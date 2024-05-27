@@ -145,13 +145,7 @@ class PHPClass
         $param->setType($className->shortName());
     }
 
-    /**
-     * @param Method|Property $commentAware
-     * @param Context         $context
-     *
-     * @return PHPClass
-     */
-    private function addUsesFromComment($commentAware, Context $context): self
+    private function addUsesFromComment(Method|Property $commentAware, Context $context): self
     {
         $comment = $commentAware->getComment();
         if (!$comment) {
