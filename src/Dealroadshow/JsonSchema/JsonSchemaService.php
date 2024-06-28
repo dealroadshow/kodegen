@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\JsonSchema;
 
 use Dealroadshow\JsonSchema\DataType\DataTypesService;

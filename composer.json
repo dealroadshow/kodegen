@@ -5,27 +5,30 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
         "guzzlehttp/psr7": "^2.0",
         "knplabs/github-api": "^3.0@dev",
         "nette/php-generator": "^3.5",
-        "symfony/console": ">=5.2",
-        "symfony/dotenv": ">=5.2",
+        "symfony/console": ">=7.0",
+        "symfony/dotenv": ">=7.0",
         "symfony/flex": "^1.11",
-        "symfony/framework-bundle": ">=5.2",
-        "symfony/http-client": ">=5.2",
-        "symfony/maker-bundle": "^1.20",
-        "symfony/yaml": ">=5.2"
+        "symfony/framework-bundle": ">=7.0",
+        "symfony/http-client": ">=7.0",
+        "symfony/yaml": ">=7.0"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "symfony/flex": true,
+            "php-http/discovery": true
+        }
     },
     "autoload": {
         "psr-4": {
@@ -59,8 +62,8 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false,
-            "require": "5.3.*"
+            "allow-contrib": true,
+            "require": "7.0.*"
         }
     },
     "description": "Generates PHP classes from json schema, including Kubernetes json schema"

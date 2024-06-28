@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Processor\Property;
 
 use Nette\PhpGenerator\ClassType;

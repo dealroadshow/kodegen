@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Processor\Property;
 
 use Dealroadshow\JsonSchema\DataType\ArrayType;
@@ -16,7 +18,7 @@ class ObjectPropertyProcessor extends AbstractPropertyDefinitionProcessor
     public function process(PropertyDefinition $property, ClassName $className, ClassType $class, Context $context): void
     {
         $property->setNullable(false);
-        $initializer = function (Property $property, Method $constructor) {
+        $initializer = function (Property $property, Method $constructor): void {
             $property
                 ->setNullable(false)
                 ->setInitialized(false);
@@ -38,6 +40,6 @@ class ObjectPropertyProcessor extends AbstractPropertyDefinitionProcessor
     {
         $type = $property->type();
 
-        return ($type instanceof ObjectType && 0 === count($type->properties())) || $type instanceof ArrayType;
+        return ($type instanceof ObjectType && 0 === count($type->properties()) && 'metadata' !== $property->name()) || $type instanceof ArrayType;
     }
 }

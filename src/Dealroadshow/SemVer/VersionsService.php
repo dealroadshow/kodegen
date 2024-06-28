@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\SemVer;
 
 class VersionsService
@@ -73,7 +75,7 @@ class VersionsService
     {
         \usort(
             $versions,
-            fn(Version $lh, Version $rh) => \version_compare($rh->string(), $lh->string())
+            fn (Version $lh, Version $rh) => \version_compare($rh->string(), $lh->string())
         );
 
         return $versions;

@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -11,24 +14,25 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+#[AsCommand(
+    name: 'k8s:schema:fetch',
+    description: 'Fetches Kubernetes json schema and saves to file',
+)]
 class K8SSchemaFetchCommand extends Command
 {
     private const ARGUMENT_FILE_PATH = 'filePath';
 
-    protected static $defaultName = 'k8s:schema:fetch';
-
     public function __construct(
-        private HttpClientInterface $httpClient,
-        private array $jsonSchemaVersions,
-        private string $jsonSchemaUrlTemplate
+        private readonly HttpClientInterface $httpClient,
+        private readonly array $jsonSchemaVersions,
+        private readonly string $jsonSchemaUrlTemplate
     ) {
         parent::__construct();
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this
-            ->setDescription('Fetches Kubernetes json schema and saves to file')
             ->addArgument(
                 self::ARGUMENT_FILE_PATH,
                 InputArgument::REQUIRED,
@@ -78,7 +82,7 @@ class K8SSchemaFetchCommand extends Command
                 \sprintf(
                     "Cannot fetch json schema from URL '%s':\n%s with message:\n%s",
                     $jsonSchemaUrl,
-                    \get_class($e),
+                    $e::class,
                     $e->getMessage()
                 )
             );

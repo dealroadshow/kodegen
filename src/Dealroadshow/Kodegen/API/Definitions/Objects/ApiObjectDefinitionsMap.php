@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\Definitions\Objects;
 
 use Dealroadshow\JsonSchema\TypesMap;
@@ -29,7 +31,7 @@ class ApiObjectDefinitionsMap implements \IteratorAggregate
     /**
      * @return \ArrayObject|array<string, ApiObjectDefinition>|ApiObjectDefinition[]
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return $this->definitionsMap;
     }

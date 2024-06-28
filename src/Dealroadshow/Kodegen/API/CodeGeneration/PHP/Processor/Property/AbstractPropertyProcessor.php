@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Processor\Property;
 
 use Nette\PhpGenerator\ClassType;
@@ -10,7 +12,7 @@ use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\ClassName;
 
 abstract class AbstractPropertyProcessor implements PropertyProcessorInterface
 {
-    public function process(PropertyDefinition $definition, Property $property, ClassName $className,ClassType $classType, Context $context): void
+    public function process(PropertyDefinition $definition, Property $property, ClassName $className, ClassType $classType, Context $context): void
     {
     }
 }

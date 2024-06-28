@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Kubernetes;
 
 use App\Github\FileTreeService;
@@ -26,12 +28,12 @@ class JsonSchemaVersionsService
             self::GITHUB_REPO
         );
 
-        $dirs = \array_filter($topLevelItems['tree'], fn(array $item) => 'tree' === $item['type']);
+        $dirs = \array_filter($topLevelItems['tree'], fn (array $item) => 'tree' === $item['type']);
         $dirNames = \array_column($dirs, 'path');
         $stableVersionPattern = '/v?\d+\.\d+\.\d+$/';
         $dirNames = \array_filter(
             $dirNames,
-            fn(string $dirname) => 0 !== \preg_match($stableVersionPattern, $dirname)
+            fn (string $dirname) => 0 !== \preg_match($stableVersionPattern, $dirname)
         );
 
         $groupedByMinorRelease = [];

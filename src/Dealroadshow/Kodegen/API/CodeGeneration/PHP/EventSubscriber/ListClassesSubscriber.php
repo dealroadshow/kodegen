@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -9,7 +11,7 @@ use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Event\CodeGeneration\DataClassGe
 
 class ListClassesSubscriber implements EventSubscriberInterface
 {
-    public function onClassGenerated(AbstractPHPClassEvent $event)
+    public function onClassGenerated(AbstractPHPClassEvent $event): void
     {
         $class = $event->getClass()->classType();
 
@@ -22,7 +24,7 @@ class ListClassesSubscriber implements EventSubscriberInterface
             ->removeMethod('setItems');
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             APIClassGeneratedEvent::class => 'onClassGenerated',

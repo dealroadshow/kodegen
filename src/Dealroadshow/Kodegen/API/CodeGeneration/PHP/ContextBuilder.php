@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP;
 
 use Dealroadshow\JsonSchema\TypesMap;
@@ -8,12 +10,12 @@ use Dealroadshow\Kodegen\API\Definitions\Objects\ApiObjectDefinitionsMap;
 
 class ContextBuilder
 {
-    private ?ApiObjectDefinitionsMap $definitions;
-    private ?TypesMap $types;
-    private ?string $rootDir;
-    private ?string $namespacePrefix;
-    private ?ClassName $resourceInterface;
-    private ?ClassName $resourceListInterface;
+    private ApiObjectDefinitionsMap|null $definitions = null;
+    private TypesMap|null $types = null;
+    private string|null $outputDir = null;
+    private string|null $namespacePrefix = null;
+    private ClassName|null $resourceInterface = null;
+    private ClassName|null $resourceListInterface = null;
 
     private function __construct()
     {
@@ -33,9 +35,9 @@ class ContextBuilder
         return $this;
     }
 
-    public function setRootDir(string $rootDir): self
+    public function setOutputDir(string $outputDir): self
     {
-        $this->rootDir = $rootDir;
+        $this->outputDir = $outputDir;
 
         return $this;
     }
@@ -65,7 +67,6 @@ class ContextBuilder
     {
         $props = (new \ReflectionObject($this))->getProperties();
         foreach ($props as $prop) {
-            $prop->setAccessible(true);
             if (null === $prop->getValue($this)) {
                 throw new \InvalidArgumentException(
                     \sprintf(
@@ -79,7 +80,7 @@ class ContextBuilder
         return new Context(
             $this->definitions,
             $this->types,
-            $this->rootDir,
+            $this->outputDir,
             $this->namespacePrefix,
             $this->resourceInterface,
             $this->resourceListInterface

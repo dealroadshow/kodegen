@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Github;
 
 use Github\Client;
@@ -44,7 +46,7 @@ class ReleasesService
         $stableVersionPattern = '/v?\d+\.\d+\.\d+$/';
         $names = \array_filter(
             $names,
-            fn(string $name) => 0 !== \preg_match($stableVersionPattern, $name)
+            fn (string $name) => 0 !== \preg_match($stableVersionPattern, $name)
         );
 
         $pattern = '/v?\d+\.\d+/';
@@ -61,6 +63,6 @@ class ReleasesService
         $minorReleases = \array_keys($minorReleases);
         \usort($minorReleases, 'version_compare');
 
-        return \array_slice($minorReleases, -($numberOfReleases+1));
+        return \array_slice($minorReleases, -($numberOfReleases + 1));
     }
 }

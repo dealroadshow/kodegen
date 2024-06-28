@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Event\CodeGeneration;
 
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\ClassName;
@@ -22,7 +24,7 @@ class JsonSerializeMethodEvent extends Event
         $this->jsonProperties = [];
     }
 
-    public function addJsonProperty(string $propertyName, string $valueCode)
+    public function addJsonProperty(string $propertyName, string $valueCode): void
     {
         $this->jsonProperties[$propertyName] = $valueCode;
     }

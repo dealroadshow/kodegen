@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\ValueObject;
 
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\ClassName;
@@ -16,10 +18,10 @@ abstract class AbstractGenerator implements VOClassGeneratorInterface
         $property = $class->addProperty(self::VALUE_PROPERTY_NAME);
         $property
             ->setPrivate()
-            ->setType($phpType->name())
+            ->setType($phpType->name)
             ->setNullable(false)
             ->addComment(PHP_EOL)
-            ->addComment('@var '.$phpType->docType())
+            ->addComment('@var '.$phpType->docType)
             ->addComment(PHP_EOL);
 
         return $this;
@@ -31,10 +33,10 @@ abstract class AbstractGenerator implements VOClassGeneratorInterface
         $constructor->setPrivate();
         $param = $constructor->addParameter(self::VALUE_PROPERTY_NAME);
         $param
-            ->setType($phpType->name())
+            ->setType($phpType->name)
             ->setNullable(false);
         $constructor->addComment(
-            \sprintf('@param %s $%s', $phpType->docType(), $param->getName())
+            \sprintf('@param %s $%s', $phpType->docType, $param->getName())
         );
         $constructor->addBody(
             \sprintf('$this->%s = $%s;', $param->getName(), $param->getName())
@@ -45,17 +47,17 @@ abstract class AbstractGenerator implements VOClassGeneratorInterface
 
     protected function defineFactoryMethod(ClassType $class, PHPType $phpType, ?string $methodName = null, ?string $paramName = null): self
     {
-        $methodName = $methodName ?? 'from'.\ucfirst($phpType->name());
+        $methodName ??= 'from'.\ucfirst($phpType->name);
         $factoryMethod = $class->addMethod($methodName);
         $factoryMethod
             ->setPublic()
             ->setStatic()
             ->setReturnType($class->getName())
             ->setReturnNullable(false);
-        $paramName = $paramName ?? \lcfirst($phpType->name());
+        $paramName ??= \lcfirst($phpType->name);
         $param = $factoryMethod->addParameter($paramName);
         $param
-            ->setType($phpType->name())
+            ->setType($phpType->name)
             ->setNullable(false);
         $factoryMethod->addBody(
             \sprintf('return new self($%s);', $param->getName())
@@ -68,7 +70,7 @@ abstract class AbstractGenerator implements VOClassGeneratorInterface
     {
         $method = $class->classType()->addMethod('jsonSerialize');
         $method->addBody(
-           $this->jsonSerializeBody()
+            $this->jsonSerializeBody()
         );
         $class->classType()->addImplement(\JsonSerializable::class);
         $class->useClass(ClassName::fromFQCN(\JsonSerializable::class));

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\TypeResolver;
 
 use Dealroadshow\JsonSchema\DataType\DataTypeInterface;

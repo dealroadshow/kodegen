@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\JsonSchema;
 
 use Dealroadshow\JsonSchema\DataType\DataTypeInterface;
@@ -49,7 +51,7 @@ class TypesMap implements \IteratorAggregate
     /**
      * @return \ArrayObject|array<string, DataTypeInterface>|DataTypeInterface[]
      */
-    public function getIterator(): iterable
+    public function getIterator(): \Traversable
     {
         return $this->map;
     }

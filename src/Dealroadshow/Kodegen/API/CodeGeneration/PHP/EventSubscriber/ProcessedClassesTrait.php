@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\EventSubscriber;
 
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\ClassName;
@@ -13,7 +15,7 @@ trait ProcessedClassesTrait
         return array_key_exists($className->fqcn(), $this->processedClasses);
     }
 
-    private function markAsProcessed(ClassName $className)
+    private function markAsProcessed(ClassName $className): void
     {
         $this->processedClasses[$className->fqcn()] = null;
     }

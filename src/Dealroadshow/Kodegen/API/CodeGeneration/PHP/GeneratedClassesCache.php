@@ -1,14 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP;
 
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\PHPClass;
 
 class GeneratedClassesCache implements \IteratorAggregate
 {
-    /**
-     * @var PHPClass[]|\ArrayObject|array<string, PHPClass>
-     */
     private \ArrayObject $map;
 
     public function __construct()
@@ -31,7 +30,7 @@ class GeneratedClassesCache implements \IteratorAggregate
         $this->map[$fqcn] = $class;
     }
 
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return $this->map;
     }

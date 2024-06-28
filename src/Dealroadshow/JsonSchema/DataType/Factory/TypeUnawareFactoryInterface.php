@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\JsonSchema\DataType\Factory;
 
 interface TypeUnawareFactoryInterface extends DataTypeFactoryInterface

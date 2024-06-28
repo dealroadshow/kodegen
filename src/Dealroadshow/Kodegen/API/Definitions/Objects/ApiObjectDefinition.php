@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\Definitions\Objects;
 
 use Dealroadshow\JsonSchema\DataType\ObjectType;
@@ -8,8 +10,8 @@ use Dealroadshow\SemVer\Version;
 
 class ApiObjectDefinition
 {
-    const ANNOTATION_GROUP_VERSION_KIND = 'x-kubernetes-group-version-kind';
-    const PROPERTY_METADATA = 'metadata';
+    public const ANNOTATION_GROUP_VERSION_KIND = 'x-kubernetes-group-version-kind';
+    public const PROPERTY_METADATA = 'metadata';
 
     private string $name;
     private ObjectType $type;

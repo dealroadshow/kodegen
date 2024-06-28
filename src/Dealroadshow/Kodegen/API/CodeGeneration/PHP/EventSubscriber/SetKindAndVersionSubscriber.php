@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\EventSubscriber;
 
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Event\CodeGeneration\APIClassGenerationEvent;
@@ -18,7 +20,7 @@ class SetKindAndVersionSubscriber implements EventSubscriberInterface
 
     private array $map = [];
 
-    public function onAPIClassGeneration(APIClassGenerationEvent $event)
+    public function onAPIClassGeneration(APIClassGenerationEvent $event): void
     {
         $className = $event->className();
         $definition = $event->definition();
@@ -38,7 +40,7 @@ class SetKindAndVersionSubscriber implements EventSubscriberInterface
         $this->markAsProcessed($className);
     }
 
-    public function onJsonSerializeMethodGeneration(JsonSerializeMethodEvent $event)
+    public function onJsonSerializeMethodGeneration(JsonSerializeMethodEvent $event): void
     {
         $className = $event->className();
         if (!array_key_exists($className->fqcn(), $this->map)) {
@@ -62,7 +64,7 @@ class SetKindAndVersionSubscriber implements EventSubscriberInterface
         );
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             APIClassGenerationEvent::class => 'onAPIClassGeneration',

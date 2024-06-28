@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\JsonSchema\DataType;
 
 use Dealroadshow\JsonSchema\DataType\Factory\DataTypeFactoryInterface;
@@ -50,7 +52,7 @@ class DataTypesService
         return UnknownType::fromJsonSchema($jsonSchema);
     }
 
-    private function ensureValidTypeName(string $typeName)
+    private function ensureValidTypeName(string $typeName): void
     {
         if (!\array_key_exists($typeName, $this->typedFactoriesMap)) {
             throw new \InvalidArgumentException(
@@ -73,7 +75,7 @@ class DataTypesService
                     throw new \LogicException(
                         \sprintf(
                             'Factories "%s" and "%s" both expect type "%s"',
-                            \get_class($factory),
+                            $factory::class,
                             \get_class($this->typedFactoriesMap[$expectedType]),
                             $expectedType
                         )

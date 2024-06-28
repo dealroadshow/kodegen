@@ -1,7 +1,8 @@
 <?php
 
-namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Processor\Property;
+declare(strict_types=1);
 
+namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Processor\Property;
 
 use Nette\PhpGenerator\ClassType;
 use Dealroadshow\JsonSchema\DataType\PropertyDefinition;

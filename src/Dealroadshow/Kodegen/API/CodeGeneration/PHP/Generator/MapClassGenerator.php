@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Generator;
 
 use Nette\PhpGenerator\ClassType;
@@ -20,7 +22,7 @@ class MapClassGenerator extends AbstractCollectionClassGenerator
         $nameParam = $this->defineNameParam($method);
         $valueParam = $method
             ->addParameter('value')
-            ->setType($itemType->name())
+            ->setType($itemType->name)
             ->setNullable(false);
 
         $method
@@ -36,6 +38,18 @@ class MapClassGenerator extends AbstractCollectionClassGenerator
             ->addBody('return $this;');
 
         return $this;
+    }
+
+    protected function defineAddAllMethodBody(ClassType $class, PHPType $itemType, Parameter $param): string
+    {
+        return \sprintf(
+            <<<'BODY'
+                foreach ($%s as $key => $value) {
+                    $this->add($key, $value);
+                }
+                BODY,
+            $param->getName()
+        );
     }
 
     protected function defineOtherMethods(ClassType $classType, PHPType $itemType): static
@@ -71,7 +85,7 @@ class MapClassGenerator extends AbstractCollectionClassGenerator
     {
         $method = $class
             ->addMethod('get')
-            ->setReturnType($itemType->name())
+            ->setReturnType($itemType->name)
             ->setReturnNullable(false);
 
         $param = $this->defineNameParam($method);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\Definitions\Objects;
 
 use Dealroadshow\JsonSchema\DataType\DataTypeInterface;
@@ -27,7 +29,7 @@ class ObjectDefinitionsService
 
     private function onlyObjects(TypesMap $typesMap): TypesMap
     {
-        return $typesMap->filter(function(DataTypeInterface $type) {
+        return $typesMap->filter(function (DataTypeInterface $type) {
             return
                 $type instanceof ObjectType
                 && $type->hasAnnotation(ApiObjectDefinition::ANNOTATION_GROUP_VERSION_KIND)
@@ -47,7 +49,7 @@ class ObjectDefinitionsService
         $newMap = [];
         foreach ($groupedByKind as $kind => $definitionsOfKind) {
             $versions = \array_map(
-                fn(ApiObjectDefinition $definition) => $definition->version(),
+                fn (ApiObjectDefinition $definition) => $definition->version(),
                 $definitionsOfKind
             );
 

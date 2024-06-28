@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\JsonSchema\DataType;
+
+use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Type\PHPType;
 
 class PropertyDefinition
 {
@@ -10,6 +14,8 @@ class PropertyDefinition
     private bool $required;
     private bool $nullable;
     private bool $skipped;
+
+    public PHPType|null $phpType = null;
 
     /**
      * Closure that will be called during generation of class constructor.
@@ -21,7 +27,7 @@ class PropertyDefinition
      * Closure will receive three parameters:
      * \Nette\Property instance, \Nette\Method instance (constructor) and \Nette\ClassType instance
      *
-     * It can than use this arguments to generate some code in constructor
+     * It can than use these arguments to generate some code in constructor
      */
     private ?\Closure $initializer = null;
 

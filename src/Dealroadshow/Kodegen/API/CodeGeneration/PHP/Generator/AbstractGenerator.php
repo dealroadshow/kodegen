@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Generator;
 
 use Dealroadshow\JsonSchema\DataType\ArrayType;
@@ -125,7 +127,7 @@ abstract class AbstractGenerator
      * @param ClassType                  $class
      * @param PropertyDefinition[]|array $properties
      */
-    protected function defineConstructor(ClassType $class, array $properties)
+    protected function defineConstructor(ClassType $class, array $properties): void
     {
         $constructor = $class->addMethod('__construct');
 
@@ -187,19 +189,24 @@ abstract class AbstractGenerator
             return $property;
         }
 
-        $type = $this->typesService->resolveType($definition->type(), $context, $definition->nullable());
+        $type = $definition->phpType;
+        if (null === $type) {
+            $runtimeParams = ['className' => $className, 'propertyDefinition' => $definition];
+            $type = $this->typesService->resolveType($propertyType, $context, $definition->nullable(), $runtimeParams);
+        }
+
         $property = $class->addProperty($definition->name());
         $property
-            ->setType($type->name())
+            ->setType($type->name)
             ->addComment(PHP_EOL);
         $description = $definition->description();
         if (null !== $description) {
             $property
-                ->addComment($description)
+                ->addComment(str_replace('*/', '*\/', $description))
                 ->addComment(' ');
         }
-        if ($type->docType() !== $type->name()) {
-            $property->addComment('@var '.$type->docType());
+        if ($type->docType !== $type->name) {
+            $property->addComment('@var '.$type->docType);
         }
         $property
             ->addComment(PHP_EOL)
@@ -266,7 +273,7 @@ abstract class AbstractGenerator
         return $method;
     }
 
-    protected function defineJsonSerializeMethod(ClassName $className, ClassType $class)
+    protected function defineJsonSerializeMethod(ClassName $className, ClassType $class): void
     {
         $method = $class
             ->addMethod('jsonSerialize')

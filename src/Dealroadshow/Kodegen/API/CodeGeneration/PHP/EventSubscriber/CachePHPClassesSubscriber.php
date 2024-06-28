@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\EventSubscriber;
 
 use Dealroadshow\Kodegen\API\CodeGeneration\PHP\Event\CodeGeneration\APIClassGeneratedEvent;
@@ -20,7 +22,7 @@ class CachePHPClassesSubscriber implements EventSubscriberInterface
         $this->cache = $cache;
     }
 
-    public function onClassGeneration(ClassGenerationEventInterface $event)
+    public function onClassGeneration(ClassGenerationEventInterface $event): void
     {
         $className = $event->className();
         $fcqn = $className->fqcn();
@@ -32,7 +34,7 @@ class CachePHPClassesSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function onClassGenerated(PHPClassEventInterface $event)
+    public function onClassGenerated(PHPClassEventInterface $event): void
     {
         $class = $event->getClass();
         $this->cache->set(

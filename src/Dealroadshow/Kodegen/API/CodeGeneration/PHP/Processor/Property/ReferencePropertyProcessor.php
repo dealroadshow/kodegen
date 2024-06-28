@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Processor\Property;
 
 use Nette\PhpGenerator\ClassType;
@@ -30,6 +32,10 @@ class ReferencePropertyProcessor extends AbstractPropertyProcessor
 
         $phpClass = $this->cache->get($fqcn);
 
+        if ($phpClass->isExternal) {
+            return;
+        }
+
         if (!$phpClass->classType()->hasMethod('__construct')) {
             return;
         }
@@ -43,7 +49,7 @@ class ReferencePropertyProcessor extends AbstractPropertyProcessor
         $property
             ->setNullable(false)
             ->setInitialized(false);
-        $initializer = function (Property $property, Method $constructor) {
+        $initializer = function (Property $property, Method $constructor): void {
             $propertyType = $property->getType();
             $propertyValue = sprintf('new %s()', $propertyType);
 

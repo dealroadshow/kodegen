@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dealroadshow\Kodegen\API\CodeGeneration\PHP\Generator;
 
 use Dealroadshow\JsonSchema\DataType\ObjectType;
@@ -18,13 +20,19 @@ class DataClassGenerator extends AbstractGenerator
     private DataClassGenerationEvent $generationEvent;
     private string $namespacePrefix = self::NAMESPACE_PREFIX;
 
-    public function generate(string $definitionName, ObjectType $type, Context $context): PHPClass
+    public function generateFromDefinitionName(string $definitionName, ObjectType $type, Context $context): PHPClass
     {
-        $namespaceName =  $context->namespacePrefix();
+        $namespaceName =  $context->namespacePrefix;
         if ($this->namespacePrefix) {
             $namespaceName .= '\\'.$this->namespacePrefix;
         }
         $className = ClassName::fromDefinitionName($namespaceName, $definitionName);
+
+        return $this->generateFromClassName($className, $type, $context);
+    }
+
+    public function generateFromClassName(ClassName $className, ObjectType $type, Context $context): PHPClass
+    {
         $this->generationEvent = new DataClassGenerationEvent($className, $context, $type);
 
         return $this->doGenerate(
